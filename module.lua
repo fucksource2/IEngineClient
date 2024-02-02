@@ -35,15 +35,15 @@ local PlayerInfo_t, PlayerInfo_mt = ffi_typeof([[
 local Stream_t = ffi_typeof([[
     struct {
         uint8_t* data;
-		int32_t data_bytes;
-		int32_t data_bits;
-		int32_t cur_bit;
-		bool overflow;
-		bool assert_on_overflow;
-		const char* name;
-		uint8_t* memory;
-		int32_t allocation_count;
-		int32_t grow_size;
+	int32_t data_bytes;
+	int32_t data_bits;
+	int32_t cur_bit;
+	bool overflow;
+	bool assert_on_overflow;
+	const char* name;
+	uint8_t* memory;
+	int32_t allocation_count;
+	int32_t grow_size;
     }
 ]])
 
@@ -53,19 +53,19 @@ local CBaseClientState_t = ffi_typeof([[
         char pad0[156];
         struct {
             char pad0[24];
-			int32_t out_sequence_nr;
-			int32_t in_sequence_nr;
-			int32_t out_sequence_nr_ack;
-			int32_t out_reliable_state;
-			int32_t in_reliable_state;
-			int32_t choked_packets;
-			$ reliable_stream;
-			$ unreliable_stream;
-			$ voice_stream;
-			int32_t socket;
-			int32_t stream_socket;
-			uint32_t max_reliable_payload_size;
-			bool was_last_message_reliable;
+            int32_t out_sequence_nr;
+            int32_t in_sequence_nr;
+            int32_t out_sequence_nr_ack;
+            int32_t out_reliable_state;
+            int32_t in_reliable_state;
+            int32_t choked_packets;
+            $ reliable_stream;
+            $ unreliable_stream;
+            $ voice_stream;
+            int32_t socket;
+            int32_t stream_socket;
+            uint32_t max_reliable_payload_size;
+            bool was_last_message_reliable;
         }* net_channel;
     }***
 ]], Stream_t, Stream_t, Stream_t)
