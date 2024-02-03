@@ -92,6 +92,10 @@ local native_WriteScreenshot = vtable_bind("engine.dll", "VEngineClient014", 133
 local native_GetServerSimulationFrameTime = vtable_bind("engine.dll", "VEngineClient014", 175, "float(__thiscall*)(void*)")
 local native_IsActiveApp = vtable_bind("engine.dll", "VEngineClient014", 196, "bool(__thiscall*)(void*)")
 
+local native_WriteToBuffer = vtable_thunk(5, "bool(__thiscall*)(void*, void*)")
+local native_IsReliable = vtable_thunk(6, "bool(__thiscall*)(void*)")
+local native_Transmit = vtable_thunk(47, "void(__thiscall*)(void*, bool)")
+
 local NetChannelInfo_ptr do
     local result, success = pcall(client_find_signature, "engine.dll", "\x7E\x3E\x8B\x3D\xCC\xCC\xCC\xCC")
     if success then NetChannelInfo_ptr = ffi_cast(CBaseClientState_t, ffi_cast("char*", result) + 4)[0][0].net_channel else error("engine.dll!::CBaseClientState couldn't be found") end
@@ -163,6 +167,26 @@ end
 M.write_screenshot = function(name)
     local success, result = pcall(tostring, name)
     if success then native_WriteScreenshot(result) end
+end
+
+M.transmit = function(reliable_only)
+    if NetChannelInfo_ptr == nil then return end
+    native_Transmit(NetChannelInfo_ptr, reliable_only)
+end
+
+M.is_reliable = function(message)
+    return native_IsReliable(message)
+end
+
+M.send_net_message = function(message, stream_name)
+    if NetChannelInfo_ptr == nil then return end
+
+    if stream_name == nil then
+        stream_name = native_IsReliable(message) and "reliable" or "unreliable"
+    end
+
+    local stream = NetChannelInfo_ptr[stream_name .. "_stream"]
+    native_WriteToBuffer(message, ffi_cast("void*", stream))
 end
 
 return M
